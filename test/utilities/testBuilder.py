@@ -4,7 +4,7 @@ from src.ohce import OHCE
 
 class OHCEBuilder:
     def __init__(self):
-        self.language = ''
+        self.language = ""
 
     def with_language(self, language):
         self.language = language
