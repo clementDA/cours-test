@@ -2,6 +2,9 @@ import unittest
 from src.ohce import OHCE
 from utilities.testBuilder import OHCEBuilder
 from src.language import LANGUAGES
+from utilities.timemock import timeMock
+
+
 
 #classe de tests de la fonction palindrome
 class TestPalindrome(unittest.TestCase):
@@ -177,6 +180,57 @@ class TestPalindrome(unittest.TestCase):
          self.assertTrue(resultat.startswith(LANGUAGES[langue]["salutation"]))
         # Et finit par l’adieu
          self.assertTrue(resultat.strip().endswith(LANGUAGES[langue]["adieu"]))
+
+
+    def test_bonjour_matin(self):
+        # ETANT DONNE un utilisateur parlant une langue connue
+        langue = "en"
+        ohce = self.builder.with_language(langue).build()
+
+        # ET nous somme le matin
+        mock = timeMock.choix_heure(10)
+
+        # QUAND on saisit n'importe quoi
+        resultat = ohce.palindrome("test")
+
+        # ALORS on affiche les salutations de la langue associée au matin
+        attendu = LANGUAGES[langue]["salutation_am"]
+        timeMock.stop_mock(mock)
+        self.assertIn(attendu, resultat)
+
+
+    def test_bonjour_apres_midi(self):
+        # ETANT DONNE un utilisateur parlant une langue connue
+        langue = "en"
+        ohce = self.builder.with_language(langue).build()
+
+        # ET nous somme l'après-midi
+        mock = timeMock.choix_heure(15)
+
+        # QUAND on saisit n'importe quoi
+        resultat = ohce.palindrome("test")
+
+        # ALORS on affiche les salutations de la langue associée a l'apres midi
+        attendu = LANGUAGES[langue]["salutation_pm"]
+        timeMock.stop_mock(mock)
+        self.assertIn(attendu, resultat)
+
+
+    def test_bonjour_nuit(self):
+        # ETANT DONNE un utilisateur parlant une langue connue
+        langue = "en"
+        ohce = self.builder.with_language(langue).build()
+
+        # ET nous somme le soir
+        mock = timeMock.choix_heure(23)
+
+        # QUAND on saisit n'importe quoi
+        resultat = ohce.palindrome("test")
+
+        # ALORS on affiche les salutations de la langue associée au soir
+        attendu = LANGUAGES[langue]["salutation_nuit"]
+        timeMock.stop_mock(mock)
+        self.assertIn(attendu, resultat)
 
 
 
