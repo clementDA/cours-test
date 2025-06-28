@@ -1,4 +1,5 @@
 from src.language import LANGUAGES
+import time
 
 class OHCE:
     def __init__(self, language):
@@ -7,7 +8,15 @@ class OHCE:
         pass
 
     def __greeting(self) -> str:
-        return self.messages["salutation"]
+        now = time.localtime()
+        match now.tm_hour:
+            case h if 4 <= h < 12:
+                return self.messages["salutation_am"]
+            case h if 12 <= h < 20:
+                return self.messages["salutation_pm"]
+            case _:
+                return self.messages["salutation_nuit"]
+
     
     def __goodbye(self) -> str:
         return "\n"+self.messages["adieu"]

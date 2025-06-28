@@ -124,18 +124,6 @@ class TestPalindrome(unittest.TestCase):
         
 
 
-    def test_bonjour_langue_connu(self):
-        #ETANT DONNE un utilisateur parlant une lague connue
-        langue = "fr"
-        ohce = self.builder.with_language(langue).build()
-
-        #QUAND on saisis n'improtequoi
-        resultat = ohce.palindrome("test")
-
-        #ALORS on affiche les salutation de la langue associé
-        attendu = LANGUAGES[langue]["salutation"]
-        self.assertIn(attendu, resultat)
-
     def test_aurevoir_langue_connu(self):
         #ETANT DONNE un utilisateur parlant une langue connue
         langue = "fr"
@@ -172,12 +160,16 @@ class TestPalindrome(unittest.TestCase):
         #ETANT DONNE un utilisateur parlant une langue connue
          langue = "fr"
          ohce = self.builder.with_language(langue).build()
+         mock = timeMock.choix_heure(10)
+
 
         #QUAND on appelle la fonction
          resultat=ohce.palindrome("")
 
+
+         timeMock.stop_mock(mock)
         #ALORS Le message commence par la salutation
-         self.assertTrue(resultat.startswith(LANGUAGES[langue]["salutation"]))
+         self.assertTrue(resultat.startswith(LANGUAGES[langue]["salutation_am"]))
         # Et finit par l’adieu
          self.assertTrue(resultat.strip().endswith(LANGUAGES[langue]["adieu"]))
 
@@ -206,7 +198,7 @@ class TestPalindrome(unittest.TestCase):
 
         # ET nous somme l'après-midi
         mock = timeMock.choix_heure(15)
-
+        
         # QUAND on saisit n'importe quoi
         resultat = ohce.palindrome("test")
 
