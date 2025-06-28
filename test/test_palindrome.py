@@ -29,11 +29,32 @@ class TestPalindrome(unittest.TestCase):
         #ETANT DONNE un utilisateur par defaut
         ohce = self.builder.build()
 
-        #QUAND on ne saisit rien
+        #QUAND on saisi une entre vide
         resultat=ohce.palindrome("")
         
         #ALORS on affiche les felicitation par defaut
         self.assertIn("felicitation", resultat)
+
+    def test_palindrome_sans_entre(self):
+        #ETANT DONNE un utilisateur par defaut
+        ohce = self.builder.build()
+
+        #QUAND on saisi une entre vide
+        #ALORS on soulève une erreur
+        with self.assertRaises(TypeError):
+             ohce.palindrome(None)
+        
+       
+    def test_palindrome_entre_mauvais_type(self):
+        #ETANT DONNE un utilisateur par defaut
+        ohce = self.builder.build()
+
+        #QUAND on saisi une entre de type non string
+        #ALORS on soulève une erreur
+        with self.assertRaises(TypeError):
+             ohce.palindrome(42)
+        
+       
 
     def test_palindrome_speciaux(self):
         #ETANT DONNE un utilisateur par defaut
@@ -164,7 +185,7 @@ class TestPalindrome(unittest.TestCase):
 
 
         #QUAND on appelle la fonction
-         resultat=ohce.palindrome("")
+         resultat=ohce.palindrome("test")
 
 
          timeMock.stop_mock(mock)
@@ -225,6 +246,74 @@ class TestPalindrome(unittest.TestCase):
         self.assertIn(attendu, resultat)
 
 
+
+    def test_bonjour_matin_limite(self):
+        # ETANT DONNE un utilisateur parlant une langue connue
+        langue = "en"
+        ohce = self.builder.with_language(langue).build()
+
+        # ET nous somme a la premiere minute du matin
+        mock = timeMock.choix_heure(4)
+
+        # QUAND on saisit n'importe quoi
+        resultat = ohce.palindrome("test")
+
+        # ALORS on affiche les salutations de la langue associée au matin
+        attendu = LANGUAGES[langue]["salutation_am"]
+        timeMock.stop_mock(mock)
+        self.assertIn(attendu, resultat)
+
+
+    def test_bonjour_apres_midi_limite(self):
+        # ETANT DONNE un utilisateur parlant une langue connue
+        langue = "en"
+        ohce = self.builder.with_language(langue).build()
+
+        # ET nous somme a la première minute de l'après midi
+        mock = timeMock.choix_heure(12)
+        
+        # QUAND on saisit n'importe quoi
+        resultat = ohce.palindrome("test")
+
+        # ALORS on affiche les salutations de la langue associée a l'apres midi
+        attendu = LANGUAGES[langue]["salutation_pm"]
+        timeMock.stop_mock(mock)
+        self.assertIn(attendu, resultat)
+
+
+    def test_bonjour_nuit_limite(self):
+        # ETANT DONNE un utilisateur parlant une langue connue
+        langue = "en"
+        ohce = self.builder.with_language(langue).build()
+
+        # ET nous somme a la première minute de la nuit
+        mock = timeMock.choix_heure(20)
+
+        # QUAND on saisit n'importe quoi
+        resultat = ohce.palindrome("test")
+
+        # ALORS on affiche les salutations de la langue associée au soir
+        attendu = LANGUAGES[langue]["salutation_nuit"]
+        timeMock.stop_mock(mock)
+        self.assertIn(attendu, resultat)
+
+
+
+    def test_etat_sans_changement(self):
+         # ETANT DONNE un utilisateur parlant une langue française
+          langue = "fr"
+          ohce = self.builder.with_language(langue).build()
+
+          # ET on capture son état interne
+          ancienne_langue = ohce.language
+          anciens_messages = ohce.messages.copy()
+
+          # QUAND on appelle la méthode palindrome
+          ohce.palindrome("radar")
+
+          # ALORS la langue et les messages ne changent pas
+          self.assertEqual(ohce.language, ancienne_langue)
+          self.assertEqual(ohce.messages, anciens_messages)
 
 if __name__ == '__main__':
     unittest.main()
