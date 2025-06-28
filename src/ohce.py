@@ -1,5 +1,6 @@
 class OHCE:
-    def __init__(self):
+    def __init__(self, language):
+        self.language= language
         pass
 
     def __greeting(self) -> str:
@@ -9,7 +10,7 @@ class OHCE:
         retour = self.__greeting()
 
         if text == text[::-1]:
-            retour += "Bien dit!"
+            retour += "Bien dit! \n"
         else:
             retour += text[::-1]
         return retour + "\nAu revoir"
